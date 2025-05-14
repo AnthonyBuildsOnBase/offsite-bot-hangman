@@ -27,20 +27,30 @@ export async function listenForMessages(
       log("Message stream started successfully. Waiting for messages...");
 
       // Process messages from the stream
+      const blackjackGames = new Map<string, BlackjackGame>();
+
       for await (const message of stream) {
-        // Simplified skip logic: only check for self and non-text initially
         if (shouldSkip(message, client)) {
-          log(
-            `[DEBUG] Skipping message ${message?.id}: Self-message or non-text content.`
-          );
           continue;
+        }
+
+        const content = message.content as string;
+        if (content.startsWith('/')) {
+          const group = message.conversation as Group;
+          let game = blackjackGames.get(group.id);
+          
+          if (!game) {
+            game = new BlackjackGame(group);
+            blackjackGames.set(group.id, game);
+          }
+
+          await game.handleCommand(message);
         }
 
         log(`[DEBUG] Message received from: ${message?.senderInboxId}`);
         log(`[DEBUG] Client inbox ID: ${client.inboxId}`);
         log(`[DEBUG] Message content type: ${message?.contentType?.typeId}`);
 
-        // Inner try...catch for processing individual messages
         try {
           const senderInboxId = message?.senderInboxId ?? "";
           const conversationId = message?.conversationId;
