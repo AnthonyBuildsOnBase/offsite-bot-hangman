@@ -1,13 +1,9 @@
-
-import { ethers } from "ethers";
 import { Group, DecodedMessage } from "@xmtp/node-sdk";
 import { log } from "./helpers/utils.js";
 
 interface Player {
   address: string;
-  balance: number;
   hand: string[];
-  bet: number;
   total: number;
 }
 
@@ -16,21 +12,19 @@ class BlackjackGame {
   private deck: string[];
   private dealerHand: string[];
   private group: Group;
-  private rake: number;
 
   constructor(group: Group) {
     this.players = new Map();
     this.deck = this.createDeck();
     this.dealerHand = [];
     this.group = group;
-    this.rake = 0.05; // 5% rake
   }
 
   private createDeck(): string[] {
     const suits = ['♠', '♣', '♥', '♦'];
     const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
     const deck = [];
-    
+
     for (const suit of suits) {
       for (const value of values) {
         deck.push(`${value}${suit}`);
@@ -49,15 +43,12 @@ class BlackjackGame {
 
   async handleCommand(message: DecodedMessage): Promise<void> {
     const content = message.content as string;
-    const [command, ...args] = content.split(' ');
+    const command = content.toLowerCase();
     const sender = message.senderAddress as string;
 
     switch (command) {
       case '/join':
-        await this.handleJoin(sender, parseFloat(args[0]));
-        break;
-      case '/bet':
-        await this.handleBet(sender, parseFloat(args[0]));
+        await this.handleJoin(sender);
         break;
       case '/hit':
         await this.handleHit(sender);
@@ -71,33 +62,14 @@ class BlackjackGame {
     }
   }
 
-  private async handleJoin(address: string, buyIn: number): Promise<void> {
-    if (buyIn <= 0) {
-      await this.group.send(`Invalid buy-in amount`);
-      return;
-    }
-
+  private async handleJoin(address: string): Promise<void> {
     this.players.set(address, {
       address,
-      balance: buyIn,
       hand: [],
-      bet: 0,
       total: 0
     });
 
-    await this.group.send(`${address} joined with ${buyIn} ETH`);
-  }
-
-  private async handleBet(address: string, amount: number): Promise<void> {
-    const player = this.players.get(address);
-    if (!player || amount > player.balance) {
-      await this.group.send(`Invalid bet or insufficient funds`);
-      return;
-    }
-
-    player.bet = amount;
-    player.balance -= amount;
-    await this.group.send(`${address} bet ${amount} ETH`);
+    await this.group.send(`${address} joined the game`);
   }
 
   private async startGame(): Promise<void> {
@@ -159,10 +131,10 @@ class BlackjackGame {
 
     // Check if all players have finished
     const allStood = Array.from(this.players.values()).every(p => p.total >= 21 || p.hand.length === 0);
-    
+
     if (allStood) {
       await this.resolveDealerHand();
-      await this.payoutWinners();
+      await this.determineWinners();
     }
   }
 
@@ -178,29 +150,20 @@ class BlackjackGame {
     }
   }
 
-  private async payoutWinners(): Promise<void> {
+  private async determineWinners(): Promise<void> {
     const dealerTotal = this.calculateTotal(this.dealerHand);
 
     for (const [address, player] of this.players) {
       if (player.total > 21) {
-        await this.group.send(`${address} lost ${player.bet} ETH`);
-        continue;
-      }
-
-      if (dealerTotal > 21 || player.total > dealerTotal) {
-        const winnings = player.bet * 2;
-        const rake = winnings * this.rake;
-        player.balance += (winnings - rake);
-        await this.group.send(`${address} won ${winnings - rake} ETH (Rake: ${rake} ETH)`);
+        await this.group.send(`${address} lost`);
+      } else if (dealerTotal > 21 || player.total > dealerTotal) {
+        await this.group.send(`${address} won!`);
       } else if (player.total === dealerTotal) {
-        const rake = player.bet * this.rake;
-        player.balance += (player.bet - rake);
-        await this.group.send(`${address} pushed, returned ${player.bet - rake} ETH (Rake: ${rake} ETH)`);
+        await this.group.send(`${address} tied`);
       } else {
-        await this.group.send(`${address} lost ${player.bet} ETH`);
+        await this.group.send(`${address} lost`);
       }
 
-      player.bet = 0;
       player.hand = [];
     }
   }

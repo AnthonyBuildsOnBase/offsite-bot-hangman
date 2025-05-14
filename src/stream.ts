@@ -38,7 +38,7 @@ export async function listenForMessages(client: Client) {
               log("Error: Conversation ID not found in message");
               continue;
             }
-            
+
             const conversation = await client.conversations.getConversationById(conversationId);
             if (!conversation) {
               log(`Error: Could not find conversation for message ${message?.id} with conversationId ${conversationId}`);
@@ -46,8 +46,7 @@ export async function listenForMessages(client: Client) {
             }
             await conversation.send(
               "🎮 Blackjack Commands:\n" +
-                "/join <amount> - Join with buy-in amount in ETH\n" +
-                "/bet <amount> - Place a bet in ETH\n" +
+                "/join - Join the game\n" +
                 "/hit - Request another card\n" +
                 "/stand - Stand with current hand\n" +
                 "/start - Start a new game round",
