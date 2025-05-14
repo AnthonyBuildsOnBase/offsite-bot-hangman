@@ -19,13 +19,15 @@ export async function listenForMessages(client: Client) {
       const stream = await client.conversations.streamAllMessages();
       log("Message stream started successfully. Waiting for messages...");
 
-      const blackjackGames = new Map<string, Game>();
+      const hangmanGames = new Map<string, Game>();
 
       for await (const message of stream) {
-        log(`Received message: ${message?.content}`);
+        const content = message?.content as string;
+        const sender = message?.senderAddress;
+        log(`Received message from ${sender}: ${content}`);
 
         if (shouldSkip(message, client)) {
-          log("Skipping message - either from self or wrong content type");
+          log(`Skipping message - from self (${message.senderInboxId === client.inboxId}) or wrong content type (${message.contentType?.typeId})`);
           continue;
         }
 
@@ -91,16 +93,21 @@ export async function listenForMessages(client: Client) {
           const group = conversation as Group;
           const isActive = await conversation.isActive();
 
-          let game = blackjackGames.get(group.id);
+          log(`Processing command in group ${group.id}`);
+          let game = hangmanGames.get(group.id);
 
           if (!game) {
+            log(`Creating new Hangman game for group ${group.id}`);
             game = new HangmanGame(group);
-            blackjackGames.set(group.id, game);
-            await group.send("Hangman game ready! Use /join to join the game and /starthangman to begin.");
+            hangmanGames.set(group.id, game);
+            await group.send("🎮 Hangman game ready! Use /join to join the game and /starthangman to begin.");
+            log(`Game created and stored for group ${group.id}`);
             continue;
           }
 
+          log(`Handling command for existing game in group ${group.id}`);
           await game.handleCommand(message);
+          log(`Command processed for group ${group.id}`);
         }
       }
 

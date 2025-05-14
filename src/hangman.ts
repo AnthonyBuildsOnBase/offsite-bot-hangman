@@ -27,6 +27,9 @@ export class HangmanGame extends Game {
     const content = message.content as string;
     const sender = message.senderAddress as string;
     const [command, ...args] = content.toLowerCase().split(" ");
+    
+    log(`Hangman command received: ${command} from ${sender} with args: ${args.join(' ')}`);
+    log(`Game state - Active: ${this.active}, Word: ${this.word}, Display: ${this.display.join('')}, Incorrect: ${this.incorrectGuesses}`);
 
     switch (command) {
       case "/starthangman":
