@@ -24,17 +24,9 @@ export async function listenForMessages(client: Client) {
       for await (const message of stream) {
         const content = message?.content as string;
         const sender = message?.senderAddress;
-        const isGroup = message?.conversation?.isGroup;
+        const conversationType = message?.conversation?.isGroup ? 'Group' : 'DM';
         
-        log(`Received message - Content: ${content}, Sender: ${sender}, ConversationType: ${isGroup ? 'Group' : 'DM'}`);
-
-        if (!isGroup) {
-          const conversation = message?.conversation;
-          if (conversation) {
-            await conversation.send("This game can only be played in group chats! Please add me to a group chat to play.");
-          }
-          continue;
-        }
+        log(`Received message - Content: ${content}, Sender: ${sender}, ConversationType: ${conversationType}`);
 
         if (!sender) {
           log('Error: Message received with undefined sender address');
@@ -99,22 +91,18 @@ export async function listenForMessages(client: Client) {
             continue;
           }
 
-          if (!conversation.isGroup) {
-            await conversation.send("This game can only be played in group chats!");
-            continue;
-          }
-          const group = conversation as Group;
           const isActive = await conversation.isActive();
+          const conversationId = conversation.id;
 
-          log(`Processing command in group ${group.id}`);
-          let game = hangmanGames.get(group.id);
+          log(`Processing command in conversation ${conversationId}`);
+          let game = hangmanGames.get(conversationId);
 
           if (!game) {
-            log(`Creating new Hangman game for group ${group.id}`);
-            game = new HangmanGame(group);
-            hangmanGames.set(group.id, game);
-            await group.send("🎮 Hangman game ready! Use /join to join the game and /starthangman to begin.");
-            log(`Game created and stored for group ${group.id}`);
+            log(`Creating new Hangman game for conversation ${conversationId}`);
+            game = new HangmanGame(conversation);
+            hangmanGames.set(conversationId, game);
+            await conversation.send("🎮 Hangman game ready! Use /join to join the game and /starthangman to begin.");
+            log(`Game created and stored for conversation ${conversationId}`);
             continue;
           }
 
