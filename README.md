@@ -1,8 +1,7 @@
-# bot-practice
 
-# XMTP Farcon Bot
+# Blackjack Bot
 
-A bot that automatically adds users to a Farcon group chat when they message it. Built with XMTP.
+A simple blackjack bot for XMTP group chats.
 
 ## Setup
 
@@ -12,10 +11,16 @@ A bot that automatically adds users to a Farcon group chat when they message it.
 
 3. Start the bot: `npm start`
 
-4. Set admin address in src/farcon.ts
-
 ## Environment Variables
 
 - `WALLET_KEY`: Private key of the wallet
 - `ENCRYPTION_KEY`: Encryption key for the local database
 - `XMTP_ENV`: XMTP environment (dev/production)
+
+## Commands
+
+- `/join <amount>` - Join the game with specified buy-in amount
+- `/bet <amount>` - Place a bet
+- `/hit` - Request another card
+- `/stand` - Stand with current hand
+- `/start` - Start a new game round
