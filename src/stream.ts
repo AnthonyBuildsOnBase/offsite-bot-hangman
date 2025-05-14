@@ -19,7 +19,10 @@ export async function listenForMessages(client: Client) {
       const blackjackGames = new Map<string, BlackjackGame>();
 
       for await (const message of stream) {
+        log(`Received message: ${message?.content}`);
+        
         if (shouldSkip(message, client)) {
+          log('Skipping message - either from self or wrong content type');
           continue;
         }
 
