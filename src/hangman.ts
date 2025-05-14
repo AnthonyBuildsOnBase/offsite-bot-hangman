@@ -177,11 +177,19 @@ export class HangmanGame extends Game {
     if (!this.scores.has(address)) {
       this.scores.set(address, 0);
     }
-    await this.group.send(`${address} joined the game! Current score: 0`);
+    const players = Array.from(this.scores.keys());
+    await this.group.send(
+      `${address} joined the game! Current score: 0\n\n` +
+      `👥 Current players (${players.length}):\n${players.join('\n')}`
+    );
   }
 
   private async showPlayerScore(address: string): Promise<void> {
     const score = this.scores.get(address) || 0;
     await this.group.send(`🎯 ${address}'s score: ${score} points`);
+  }
+
+  public getPlayers(): string[] {
+    return Array.from(this.scores.keys());
   }
 }

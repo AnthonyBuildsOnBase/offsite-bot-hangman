@@ -52,13 +52,17 @@ export async function listenForMessages(client: Client) {
               log(`Error: Could not find conversation for message ${message?.id} with conversationId ${conversationId}`);
               continue;
             }
+            const game = hangmanGames.get(conversationId);
+            const players = game ? Array.from(game.getPlayers()) : [];
+            
             await conversation.send(
               "🎮 Hangman Commands:\n" +
                 "/join - Join the game\n" +
                 "/starthangman - Start a new game\n" +
                 "/guess <letter> - Guess a letter\n" +
                 "/guessword <word> - Guess the entire word\n" +
-                "/leaderboard - Show scores",
+                "/leaderboard - Show scores\n\n" +
+                `👥 Current players (${players.length}):\n${players.join('\n') || "No players yet!"}`
             );
             log("Help message sent successfully");
           } catch (error) {
