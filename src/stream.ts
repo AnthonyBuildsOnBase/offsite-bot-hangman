@@ -22,8 +22,13 @@ export async function listenForMessages(client: Client) {
 
       for await (const message of stream) {
         const content = message?.content as string;
-        const sender = message.senderAddress || message.conversationId as string;
+        const sender = message.senderAddress;
         const conversationType = message?.conversation?.isGroup ? 'Group' : 'DM';
+
+        if (!sender) {
+          log('Error: Message received without sender address');
+          continue;
+        }
 
         log(`Received message - Content: ${content}, Sender: ${sender}, ConversationType: ${conversationType}`);
 
