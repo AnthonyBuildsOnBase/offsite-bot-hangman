@@ -40,6 +40,7 @@ export async function listenForMessages(client: Client) {
               "/stand - Stand with current hand\n" +
               "/start - Start a new game round"
             );
+            log('Sent help message');
           }
           continue;
         }
