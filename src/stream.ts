@@ -31,8 +31,6 @@ export async function listenForMessages(client: Client) {
           continue;
         }
 
-        const content = message.content as string;
-
         // Handle help command
         if (content.toLowerCase() === "/help") {
           log("Processing help command...");
