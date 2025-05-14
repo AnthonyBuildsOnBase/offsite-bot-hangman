@@ -26,3 +26,9 @@ A multiplayer Hangman game bot for XMTP group chats.
 - `/leaderboard` - Show scores
 - `/score` - Show your current score
 - `/help` - Display all available commands
+
+## Demo Video
+<video width="100%" controls>
+  <source src="attached_assets/Screen Recording 2025-05-14 at 4.04.23 PM.mov" type="video/mp4">
+  Your browser does not support the video element.
+</video>
