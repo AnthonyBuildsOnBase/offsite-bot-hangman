@@ -33,11 +33,9 @@ export async function listenForMessages(client: Client) {
         if (content.toLowerCase() === "/help") {
           log("Processing help command...");
           try {
-            const conversation = message.conversationId;
-            log(message);
-
-            if (!conversationId) {
-              log("Error: Conversation not found ", message);
+            const conversation = message.conversation;
+            if (!conversation) {
+              log("Error: Conversation not found for message");
               continue;
             }
             await conversation.send(
