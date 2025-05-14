@@ -90,8 +90,6 @@ export async function listenForMessages(client: Client) {
             continue;
           }
 
-          const isActive = await conversation.isActive();
-
           log(`Processing command in conversation ${conversation.id}`);
           let game = hangmanGames.get(conversation.id);
 
