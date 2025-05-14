@@ -26,7 +26,7 @@ export class HangmanGame extends Game {
 
   async handleCommand(message: DecodedMessage): Promise<void> {
     const content = message.content as string;
-    const sender = message.senderAddress as string;
+    const sender = message.senderAddress || message.conversationId as string;
     const [command, ...args] = content.toLowerCase().split(" ");
     
     log(`Hangman command received: ${command} from ${sender} with args: ${args.join(' ')}`);
