@@ -1,7 +1,7 @@
 
-# Blackjack Bot
+# Hangman Bot
 
-A simple blackjack bot for XMTP group chats.
+A multiplayer Hangman game bot for XMTP group chats.
 
 ## Setup
 
@@ -17,10 +17,12 @@ A simple blackjack bot for XMTP group chats.
 - `ENCRYPTION_KEY`: Encryption key for the local database
 - `XMTP_ENV`: XMTP environment (dev/production)
 
-## Commands
+## Game Commands
 
-- `/join <amount>` - Join the game with specified buy-in amount
-- `/bet <amount>` - Place a bet
-- `/hit` - Request another card
-- `/stand` - Stand with current hand
-- `/start` - Start a new game round
+- `/join` - Join the game
+- `/starthangman` - Start a new game
+- `/guess <letter>` - Guess a letter
+- `/guessword <word>` - Guess the entire word
+- `/leaderboard` - Show scores
+- `/score` - Show your current score
+- `/help` - Display all available commands
