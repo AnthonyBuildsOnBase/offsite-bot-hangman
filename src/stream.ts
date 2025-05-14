@@ -84,7 +84,8 @@ export async function listenForMessages(client: Client) {
             continue;
           }
 
-          if (!conversation.isGroup) {
+          const group = message.conversation as Group;
+          if (!group) {
             await conversation.send("This game can only be played in group chats!");
             continue;
           }
