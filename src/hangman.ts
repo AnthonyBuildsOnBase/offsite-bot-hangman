@@ -1,6 +1,7 @@
 
 import { Group, DecodedMessage } from "@xmtp/node-sdk";
 import { Game, Player } from "./game.js";
+import { log } from "./helpers/utils.js";
 
 interface HangmanPlayer extends Player {
   score: number;
