@@ -1,0 +1,96 @@
+Blackjack Bot - Simple Feature List and Flow
+🎯 Objective:
+A group chat Blackjack bot where players bet against the bot (house). The bot deals cards, manages bets, and takes a percentage (rake) of each winning pot.
+
+🌟 Feature List:
+Join Game:
+
+Command: /join <buy-in amount>
+
+Players buy in to enter the game. Funds are held by the bot.
+
+Start Round:
+
+Command: /start (Triggered by the host or bot admin)
+
+Bot announces the start of the game and deals two cards to each player and itself (1 card face up, 1 card face down).
+
+Betting Round:
+
+Command: /bet <amount>
+
+Players place their bets. The amount is subtracted from their balance and added to the pot.
+
+Player Actions:
+
+Commands: /hit, /stand
+
+Players choose to hit or stand. The bot sends a new card for each hit and keeps track of player totals.
+
+Dealer’s Turn:
+
+The bot reveals its hidden card and follows basic blackjack strategy (hit until 17 or higher).
+
+Determine Winners:
+
+Bot compares player hands to its hand.
+
+Players who beat the bot receive double their bet (minus rake).
+
+Players who tie receive their bet back (minus rake).
+
+Payout and Rake Collection:
+
+Bot collects a percentage (e.g., 5%) of the total pot as the rake.
+
+Remaining pot is distributed to winners.
+
+Game Reset:
+
+Players can /leave or /join the next round.
+
+🛠️ Flow:
+markdown
+Copy
+Edit
+1. Players join with /join <amount>
+   - Bot stores player balance and adds to pot.
+
+2. Host starts the round with /start
+   - Bot deals 2 cards to each player and itself.
+   - Displays 1 card of the dealer and both cards of each player.
+
+3. Players place bets using /bet <amount>
+   - Bot subtracts the bet amount from each player’s balance.
+
+4. Player Actions
+   - Each player acts in turn using /hit or /stand.
+   - Bot sends a new card on /hit and updates the hand total.
+
+5. Dealer’s Turn
+   - Bot reveals its hidden card and hits until it reaches 17 or higher.
+
+6. Showdown
+   - Bot compares each player’s total to its own:
+     - If the player busts, they lose the bet.
+     - If the player beats the bot, they receive 2x their bet (minus rake).
+     - If the player ties, they get their bet back (minus rake).
+
+7. Payout and Rake Collection
+   - Bot collects a percentage of the total pot as rake.
+   - Remaining pot is distributed to winners.
+
+8. Round Ends
+   - Players can `/leave` or `/join` for the next round.
+✅ Edge Cases & Considerations:
+Handling ties and multiple winners.
+
+Auto-stand if a player takes too long to respond.
+
+Ensuring transparency with pot distribution and rake collection.
+
+Preventing players from betting more than their balance.
+
+Handling blackjack (21) as a special case (e.g., 1.5x payout).
+
+Would you like me to outline the basic command structure and state management for implementation?
