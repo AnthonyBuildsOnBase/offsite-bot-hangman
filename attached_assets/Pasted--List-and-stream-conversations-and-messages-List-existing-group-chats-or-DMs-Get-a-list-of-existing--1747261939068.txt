@@ -1,0 +1,79 @@
+
+List and stream conversations and messages
+List existing group chats or DMs
+Get a list of existing group chats or DMs in the local database. By default, the conversations are listed in descending order by their lastMessage created at value. If a conversation does not contain any messages, the conversation is ordered by its createdAt value.
+
+Browser
+Node
+React Native
+Kotlin
+Swift
+const allConversations = await client.conversations.list();
+const allGroups = await client.conversations.listGroups();
+const allDms = await client.conversations.listDms();
+List a user's active conversations
+The isActive() method determines whether the current user is still an active member of a group conversation. For example:
+
+When a user is added to a group, isActive() returns true for that user
+When a user is removed from a group, isActive() returns false for that user
+You can use a user's isActive: true value as a filter parameter when listing conversations. You can potentially have a separate section for "archived" or "inactive" conversations where you could use isActive: false.
+
+Stream all group chats and DMs
+Listens to the network for new group chats and DMs. Whenever a new conversation starts, it triggers the provided callback function with a ConversationContainer object. This allows the client to immediately respond to any new group chats or DMs initiated by other users.
+
+Browser
+Node
+React Native
+Kotlin
+Swift
+const stream = await client.conversations.stream();
+ 
+try {
+  for await (const conversation of stream) {
+    // Received a conversation
+    console.log("New conversation:", conversation);
+  }
+} catch (error) {
+  // Log any stream errors
+  console.error(error);
+}
+Stream all group chat and DM messages
+Listens to the network for new messages within all active group chats and DMs. Whenever a new message is sent to any of these conversations, the callback is triggered with a DecodedMessage object. This keeps the inbox up to date by streaming in messages as they arrive.
+
+Important
+The stream is infinite. Therefore, any looping construct used with the stream won't terminate unless you explicitly initiate the termination. You can initiate the termination by breaking the loop or by making an external call to return.
+
+Browser
+Node
+React Native
+Kotlin
+Swift
+const stream = await client.conversations.streamAllMessages();
+ 
+try {
+  for await (const message of stream) {
+    // Received a message
+    console.log("New message:", message);
+  }
+} catch (error) {
+  // Log any stream errors
+  console.error(error);
+}
+Handle unsupported content types
+As more custom and standards-track content types are introduced into the XMTP ecosystem, your app may encounter content types it does not support. This situation, if not handled properly, could lead to app crashes.
+
+Each message is accompanied by a fallback property, which offers a descriptive string representing the content type's expected value. It's important to note that fallbacks are immutable and are predefined in the content type specification. In instances where fallback is undefined, such as read receipts, it indicates that the content is not intended to be rendered. If you're venturing into creating custom content types, you're provided with the flexibility to specify a custom fallback string. For a deeper dive into this, see Build custom content types.
+
+Browser
+Node
+React Native
+Kotlin
+Swift
+const codec = client.codecFor(content.contentType);
+if (!codec) {
+  /*Not supported content type*/
+  if (message.fallback !== undefined) {
+    return message.fallback;
+  }
+  // Handle other types like ReadReceipts which are not meant to be displayed
+}
