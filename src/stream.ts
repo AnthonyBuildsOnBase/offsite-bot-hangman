@@ -35,6 +35,17 @@ export async function listenForMessages(
         }
 
         const content = message.content as string;
+        
+        // Handle greetings
+        if (content.toLowerCase() === 'hi') {
+          const conversation = message.conversation;
+          if (conversation) {
+            await conversation.send('Hello! 👋');
+          }
+          continue;
+        }
+
+        // Handle game commands
         if (content.startsWith('/')) {
           const group = message.conversation as Group;
           let game = blackjackGames.get(group.id);
