@@ -92,14 +92,29 @@ export class HangmanGame extends Game {
         }
       }
       this.updateScore(address, 5);
-      await this.group.send(`Correct guess! +5 points\nWord: ${this.display.join(" ")}`);
+      const correctLeaderboard = Array.from(this.scores.entries())
+        .sort(([, a], [, b]) => b - a)
+        .map(([addr, score]) => `${addr}: ${score} points`)
+        .join("\n");
+      
+      await this.group.send(
+        `Correct guess! +5 points\n` +
+        `Word: ${this.display.join(" ")}\n\n` +
+        `🏆 Scores:\n${correctLeaderboard}`
+      );
     } else {
       this.incorrectGuesses++;
       this.updateScore(address, -3);
+      const wrongLeaderboard = Array.from(this.scores.entries())
+        .sort(([, a], [, b]) => b - a)
+        .map(([addr, score]) => `${addr}: ${score} points`)
+        .join("\n");
+      
       await this.group.send(
         `Wrong guess! -3 points\n` +
         `Word: ${this.display.join(" ")}\n` +
-        `Incorrect guesses: ${this.incorrectGuesses}/6`
+        `Incorrect guesses: ${this.incorrectGuesses}/6\n\n` +
+        `🏆 Scores:\n${wrongLeaderboard}`
       );
     }
 
