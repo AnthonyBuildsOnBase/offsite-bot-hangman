@@ -90,7 +90,6 @@ export async function listenForMessages(client: Client) {
             continue;
           }
 
-          const group = conversation as Group;
           let game = blackjackGames.get(group.id);
 
           if (!game) {
