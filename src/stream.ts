@@ -32,12 +32,12 @@ export async function listenForMessages(client: Client) {
         if (content.toLowerCase() === '/help') {
           log('Processing help command...');
           try {
-            if (!message.conversation) {
+            const conversation = message.conversation;
+            if (!conversation) {
               log('Error: Conversation not found');
               continue;
             }
-            const group = message.conversation;
-            await group.send(
+            await conversation.send(
               "🎮 Blackjack Commands:\n" +
               "/join <amount> - Join with buy-in amount in ETH\n" +
               "/bet <amount> - Place a bet in ETH\n" +
