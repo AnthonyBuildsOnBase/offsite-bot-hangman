@@ -24,10 +24,15 @@ export async function listenForMessages(client: Client) {
       for await (const message of stream) {
         const content = message?.content as string;
         const sender = message?.senderAddress;
-        log(`Received message from ${sender}: ${content}`);
+        log(`Received message - Content: ${content}, Sender: ${sender}, ConversationType: ${message?.conversation?.isGroup ? 'Group' : 'DM'}`);
+
+        if (!sender) {
+          log('Error: Message received with undefined sender address');
+          continue;
+        }
 
         if (shouldSkip(message, client)) {
-          log(`Skipping message - from self (${message.senderInboxId === client.inboxId}) or wrong content type (${message.contentType?.typeId})`);
+          log(`Skipping message - From self: ${message.senderInboxId === client.inboxId}, ContentType: ${message.contentType?.typeId}`);
           continue;
         }
 
