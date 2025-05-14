@@ -1,0 +1,14 @@
+e:///home/runner/workspace/src/stream.ts:3
+```;import{isSameString,log}from"./helpers/utils.js";import BlackjackGame from"./blackjack.js";const MAX_RETRIES=6;const RETRY_DELAY_MS=1e4;const sleep=__name(ms=>new Promise(resolve=>setTimeout(resolve,ms)),"sleep");async function listenForMessages(client){let retryCount=0;while(retryCount<MAX_RETRIES){try{log(`Starting message stream... (Attempt ${retryCount+1}/${MAX_RETRIES})`);const stream=await client.conversations.streamAllMessages();log("Message stream started successfully. Waiting for messages...");const blackjackGames=new Map;for await(const message of stream){if(shouldSkip(message,client)){continue}const content=message.content;if(content.toLowerCase()==="hi"){const conversation=message.conversation;if(conversation){await conversation.send("Hello! \u{1F44B}")}continue}if(content.startsWith("/")){const group=message.conversation;let game=blackjackGames.get(group.id);if(!game){game=new BlackjackGame(group);blackjackGames.set(group.id,game)}await game.handleCommand(message)}}retryCount=0}catch(streamError){retryCount++;log(`Stream error (Attempt ${retryCount}/${MAX_RETRIES}): ${streamError instanceof Error?streamError.message:String(streamError)}`);if(retryCount<MAX_RETRIES){log(`Waiting ${RETRY_DELAY_MS/1e3} seconds before retrying stream...`);await sleep(RETRY_DELAY_MS)}}}}__name(listenForMessages,"listenForMessages");function shouldSkip(message,client){if(!message){return true}return isSameString(message.senderInboxId,client.inboxId)||message.contentType?.typeId!=="text"}__name(shouldSkip,"shouldSkip");export{listenForMessages};
+ ^
+
+TypeError: " tags. I will make sure to include all necessary parts of the original code while applying the modifications from the edited snippet. I will also ensure that the indentation and formatting are preserved.
+
+" is not a function
+    at file:///home/runner/workspace/src/stream.ts:3:2
+    at ModuleJob.run (node:internal/modules/esm/module_job:234:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:473:24)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:122:5)
+
+Node.js v20.18.1
+Failed running 'src/index.ts'
