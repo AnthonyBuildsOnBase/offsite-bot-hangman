@@ -28,6 +28,22 @@ export async function listenForMessages(client: Client) {
 
         const content = message.content as string;
         
+        // Handle help command
+        if (content.toLowerCase() === '/help') {
+          const conversation = message.conversation;
+          if (conversation) {
+            await conversation.send(
+              "🎮 Blackjack Commands:\n" +
+              "/join <amount> - Join with buy-in amount in ETH\n" +
+              "/bet <amount> - Place a bet in ETH\n" +
+              "/hit - Request another card\n" +
+              "/stand - Stand with current hand\n" +
+              "/start - Start a new game round"
+            );
+          }
+          continue;
+        }
+
         // Handle greetings
         if (content.toLowerCase() === 'hi') {
           const conversation = message.conversation;
