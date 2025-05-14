@@ -92,23 +92,22 @@ export async function listenForMessages(client: Client) {
           }
 
           const isActive = await conversation.isActive();
-          const conversationId = conversation.id;
 
-          log(`Processing command in conversation ${conversationId}`);
-          let game = hangmanGames.get(conversationId);
+          log(`Processing command in conversation ${conversation.id}`);
+          let game = hangmanGames.get(conversation.id);
 
           if (!game) {
-            log(`Creating new Hangman game for conversation ${conversationId}`);
+            log(`Creating new Hangman game for conversation ${conversation.id}`);
             game = new HangmanGame(conversation);
-            hangmanGames.set(conversationId, game);
+            hangmanGames.set(conversation.id, game);
             await conversation.send("🎮 Hangman game ready! Use /join to join the game and /starthangman to begin.");
-            log(`Game created and stored for conversation ${conversationId}`);
+            log(`Game created and stored for conversation ${conversation.id}`);
             continue;
           }
 
-          log(`Handling command for existing game in group ${group.id}`);
+          log(`Handling command for existing game in conversation ${conversation.id}`);
           await game.handleCommand(message);
-          log(`Command processed for group ${group.id}`);
+          log(`Command processed for conversation ${conversation.id}`);
         }
       }
 
