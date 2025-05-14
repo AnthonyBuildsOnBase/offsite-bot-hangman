@@ -21,13 +21,13 @@ export async function listenForMessages(client: Client) {
       const hangmanGames = new Map<string, Game>();
 
       for await (const message of stream) {
-        if (!message || !message.senderAddress) {
-          log('Message skipped: No sender address');
+        if (!message) {
+          log('Message skipped: Invalid message');
           continue;
         }
 
         const content = message.content as string;
-        const sender = message.senderAddress;
+        const sender = message.senderAddress || message.conversationId || 'unknown';
         const conversationType = message?.conversation?.isGroup ? 'Group' : 'DM';
 
         log(`Received message - Content: ${content}, Sender: ${sender}, ConversationType: ${conversationType}`);
