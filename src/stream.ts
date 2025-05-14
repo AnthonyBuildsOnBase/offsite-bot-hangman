@@ -1,7 +1,4 @@
-` tags. I will make sure to include all necessary parts of the original code while applying the modifications from the edited snippet. I will also ensure that the indentation and formatting are preserved.
 
-```
-<replit_final_file>
 import { Client, DecodedMessage, Group } from "@xmtp/node-sdk";
 import { isSameString, log } from "./helpers/utils.js";
 import BlackjackGame from "./blackjack.js";
@@ -27,7 +24,7 @@ export async function listenForMessages(client: Client) {
         }
 
         const content = message.content as string;
-
+        
         // Handle greetings
         if (content.toLowerCase() === 'hi') {
           const conversation = message.conversation;
