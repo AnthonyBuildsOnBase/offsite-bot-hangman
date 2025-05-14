@@ -52,6 +52,9 @@ export class HangmanGame extends Game {
       case "/join":
         await this.handleJoin(sender);
         break;
+      case "/score":
+        await this.showPlayerScore(sender);
+        break;
     }
   }
 
@@ -160,5 +163,10 @@ export class HangmanGame extends Game {
       this.scores.set(address, 0);
     }
     await this.group.send(`${address} joined the game! Current score: 0`);
+  }
+
+  private async showPlayerScore(address: string): Promise<void> {
+    const score = this.scores.get(address) || 0;
+    await this.group.send(`🎯 ${address}'s score: ${score} points`);
   }
 }
