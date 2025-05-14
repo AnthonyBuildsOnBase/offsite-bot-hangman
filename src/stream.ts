@@ -46,11 +46,12 @@ export async function listenForMessages(client: Client) {
               continue;
             }
             await conversation.send(
-              "🎮 Blackjack Commands:\n" +
+              "🎮 Hangman Commands:\n" +
                 "/join - Join the game\n" +
-                "/hit - Request another card\n" +
-                "/stand - Stand with current hand\n" +
-                "/start - Start a new game round",
+                "/starthangman - Start a new game\n" +
+                "/guess <letter> - Guess a letter\n" +
+                "/guessword <word> - Guess the entire word\n" +
+                "/leaderboard - Show scores",
             );
             log("Help message sent successfully");
           } catch (error) {
