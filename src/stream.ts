@@ -1,6 +1,7 @@
 import { Client, DecodedMessage, Group } from "@xmtp/node-sdk";
 import { isSameString, log } from "./helpers/utils.js";
 import { Game } from "./game.js";
+import { HangmanGame } from "./hangman.js";
 
 const MAX_RETRIES = 6;
 const RETRY_DELAY_MS = 10000;
@@ -73,10 +74,9 @@ export async function listenForMessages(client: Client) {
           let game = blackjackGames.get(group.id);
 
           if (!game) {
-            // Initialize your new game here
-            // game = new YourGame(group);
-            // blackjackGames.set(group.id, game);
-            await group.send("Game system ready! Implement your game by extending the Game class.");
+            game = new HangmanGame(group);
+            blackjackGames.set(group.id, game);
+            await group.send("Hangman game ready! Use /join to join the game and /starthangman to begin.");
             continue;
           }
 
