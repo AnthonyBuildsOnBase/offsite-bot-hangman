@@ -30,9 +30,9 @@ export async function listenForMessages(client: Client) {
         
         // Handle help command
         if (content.toLowerCase() === '/help') {
-          const conversation = message.conversation;
-          if (conversation) {
-            await conversation.send(
+          log('Processing help command...');
+          try {
+            await message.conversation.send(
               "🎮 Blackjack Commands:\n" +
               "/join <amount> - Join with buy-in amount in ETH\n" +
               "/bet <amount> - Place a bet in ETH\n" +
@@ -40,7 +40,9 @@ export async function listenForMessages(client: Client) {
               "/stand - Stand with current hand\n" +
               "/start - Start a new game round"
             );
-            log('Sent help message');
+            log('Help message sent successfully');
+          } catch (error) {
+            log(`Error sending help message: ${error}`);
           }
           continue;
         }
