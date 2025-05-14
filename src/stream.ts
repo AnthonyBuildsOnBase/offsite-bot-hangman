@@ -1,4 +1,3 @@
-
 import { Client, DecodedMessage, Group } from "@xmtp/node-sdk";
 import { isSameString, log } from "./helpers/utils.js";
 import { Game } from "./game.js";
@@ -23,9 +22,9 @@ export async function listenForMessages(client: Client) {
 
       for await (const message of stream) {
         const content = message?.content as string;
-        const sender = message?.senderAddress;
+        const sender = message.senderAddress || message.conversationId as string;
         const conversationType = message?.conversation?.isGroup ? 'Group' : 'DM';
-        
+
         log(`Received message - Content: ${content}, Sender: ${sender}, ConversationType: ${conversationType}`);
 
         if (!sender) {
