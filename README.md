@@ -33,6 +33,8 @@ A multiplayer Hangman game bot for XMTP group chats.
   Your browser does not support the video tag.
 </video>
 
+[Download demo video (MOV)](demo.mov)
+
 *Note: If the video doesn't load, you can also view the GIF demo below:*
 
 ![Hangman Bot Demo](attached_assets/Screen%20Recording%202025-05-14%20at%204.04.23%20PM.gif)
