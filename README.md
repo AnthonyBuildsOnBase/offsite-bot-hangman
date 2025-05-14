@@ -28,7 +28,6 @@ A multiplayer Hangman game bot for XMTP group chats.
 - `/help` - Display all available commands
 
 ## Demo Video
-<video width="100%" controls>
-  <source src="attached_assets/Screen Recording 2025-05-14 at 4.04.23 PM.mov" type="video/mp4">
-  Your browser does not support the video element.
-</video>
+https://user-images.githubusercontent.com/YOUR_USERNAME/hangman-bot/raw/main/demo.mov
+
+![Hangman Bot Demo](demo.gif)
