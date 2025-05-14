@@ -24,7 +24,17 @@ export async function listenForMessages(client: Client) {
       for await (const message of stream) {
         const content = message?.content as string;
         const sender = message?.senderAddress;
-        log(`Received message - Content: ${content}, Sender: ${sender}, ConversationType: ${message?.conversation?.isGroup ? 'Group' : 'DM'}`);
+        const isGroup = message?.conversation?.isGroup;
+        
+        log(`Received message - Content: ${content}, Sender: ${sender}, ConversationType: ${isGroup ? 'Group' : 'DM'}`);
+
+        if (!isGroup) {
+          const conversation = message?.conversation;
+          if (conversation) {
+            await conversation.send("This game can only be played in group chats! Please add me to a group chat to play.");
+          }
+          continue;
+        }
 
         if (!sender) {
           log('Error: Message received with undefined sender address');
