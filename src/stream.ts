@@ -84,11 +84,11 @@ export async function listenForMessages(client: Client) {
             continue;
           }
 
-          const group = message.conversation as Group;
-          if (!group) {
+          if (!message.conversation.isGroup()) {
             await conversation.send("This game can only be played in group chats!");
             continue;
           }
+          const group = message.conversation as Group;
 
           let game = blackjackGames.get(group.id);
 
